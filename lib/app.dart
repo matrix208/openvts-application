@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/app_entry.dart';
+import 'package:smart_avl/app_entry.dart';
 
 import 'core/notifications/mobile_push_lifecycle_observer.dart';
 import 'core/notifications/mobile_push_navigation.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/app.dart';
-import 'package:open_vts/bootstrap.dart';
-import 'package:open_vts/core/performance/open_vts_perf.dart';
-import 'package:open_vts/core/providers/shared_preferences_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_avl/app.dart';
+import 'package:smart_avl/bootstrap.dart';
+import 'package:smart_avl/core/performance/open_vts_perf.dart';
+import 'package:smart_avl/core/providers/shared_preferences_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +13,7 @@ Future<void> main() async {
     'bootstrap.sharedPreferences',
     SharedPreferences.getInstance,
   );
+
   await bootstrap(() async {
     runApp(
       ProviderScope(

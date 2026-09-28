@@ -22,7 +22,7 @@ class UserDashboardService {
   }
 
   Future<List<UserDashboardListItem>> getDashboards() async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockDashboards();
     }
 
@@ -34,7 +34,7 @@ class UserDashboardService {
   }
 
   Future<UserDashboardDetail> getDashboardById(String id) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockDashboardDetail(id);
     }
 
@@ -48,7 +48,7 @@ class UserDashboardService {
   Future<UserDashboardFleetStatus> getFleetStatus({
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockFleetStatus();
     }
 
@@ -72,7 +72,7 @@ class UserDashboardService {
     String? vehicleId,
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockUsageLast7Days(vehicleId: vehicleId);
     }
 
@@ -99,7 +99,7 @@ class UserDashboardService {
     String? vehicleId,
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockWeeklyComparison(vehicleId: vehicleId);
     }
 
@@ -130,7 +130,7 @@ class UserDashboardService {
     String? refreshKey,
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockRecentAlerts(limit: limit, vehicleId: vehicleId);
     }
 
@@ -164,7 +164,7 @@ class UserDashboardService {
   }
 
   Future<UserDashboardAlertDetail> getRecentAlertDetail(String id) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockAlertDetail(id);
     }
 
@@ -176,7 +176,7 @@ class UserDashboardService {
   }
 
   Future<void> markRecentAlertRead(String id) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return;
     }
 
@@ -194,7 +194,7 @@ class UserDashboardService {
     int limit = 10,
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockTopPerformingAssets(from: from, to: to, limit: limit);
     }
 
@@ -229,7 +229,7 @@ class UserDashboardService {
     required DateTime from,
     required DateTime to,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockDayNightComparison(
         vehicleId: vehicleId,
         from: from,
@@ -252,7 +252,7 @@ class UserDashboardService {
   Future<List<UserDashboardVehicleOption>> getVehicles({
     bool forceRefresh = false,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockVehicles();
     }
 
@@ -275,7 +275,7 @@ class UserDashboardService {
   Future<List<UserDashboardSensorOption>> getVehicleSensors(
     String vehicleId,
   ) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockSensors();
     }
 
@@ -297,7 +297,7 @@ class UserDashboardService {
     required DateTime to,
     int maxPoints = 500,
   }) async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockSensorHistory(from: from, to: to);
     }
 
@@ -317,7 +317,7 @@ class UserDashboardService {
   }
 
   Future<List<UserDashboardCustomCommand>> getCustomCommands() async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return parseSuperadminCustomCommands(_mockCustomCommandsJson());
     }
 
@@ -329,7 +329,7 @@ class UserDashboardService {
   }
 
   Future<List<UserDashboardSystemVariable>> getSystemVariables() async {
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return parseSuperadminSystemVariables(_mockSystemVariablesJson());
     }
 
@@ -360,7 +360,7 @@ class UserDashboardService {
       if (note != null && note.trim().isNotEmpty) 'note': note.trim(),
     };
 
-    if (AppConfig.useMockData) {
+    if (AppConfig.useMockData || AppConfig.demoMode) {
       return _mockSendCommandResult(payload);
     }
 

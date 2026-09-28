@@ -365,7 +365,7 @@ class _CreatedFooter extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.schedule_outlined,
             size: 16,
             color: OpenVtsColors.textSecondary,

@@ -6,14 +6,14 @@ void main() {
     test('derives namespace URLs from API base without the REST /api path', () {
       expect(
         SocketService.socketUrlForApiBase(
-          'https://app.openvts.io/api',
+          'https://app.smartavl.net/',
           '/telemetry',
         ),
         'https://app.openvts.io/telemetry',
       );
       expect(
         SocketService.socketUrlForApiBase(
-          'https://app.openvts.io/api/',
+          'https://app.smartavl.net//',
           'notifications',
         ),
         'https://app.openvts.io/notifications',

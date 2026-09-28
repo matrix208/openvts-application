@@ -5,6 +5,7 @@ import 'package:http_parser/http_parser.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/api/api_options.dart';
+import '../../../core/config/app_config.dart';
 import '../models/user_vehicle_model.dart';
 
 class UserVehicleService {
@@ -21,6 +22,10 @@ class UserVehicleService {
   );
 
   Future<List<UserVehicleListItem>> getVehicles({String? refreshKey}) async {
+    if (AppConfig.demoMode) {
+      return _demoVehicles();
+    }
+
     final response = await _apiClient.get<List<UserVehicleListItem>>(
       ApiEndpoints.user.vehicles,
       queryParameters: _query(<String, dynamic>{'rk': refreshKey}),
@@ -32,6 +37,11 @@ class UserVehicleService {
 
   Future<UserVehicleDetails> getVehicleById(String id) async {
     final vehicleId = _requireId(id, 'vehicleId');
+
+    if (AppConfig.demoMode) {
+      return _demoVehicleDetails(vehicleId);
+    }
+
     final response = await _apiClient.get<UserVehicleDetails>(
       ApiEndpoints.user.vehicleById(vehicleId),
       options: _readOptions,
@@ -94,6 +104,16 @@ class UserVehicleService {
     bool includeLive = true,
   }) async {
     final id = _requireId(vehicleId, 'vehicleId');
+
+    if (AppConfig.demoMode) {
+      return _demoSensorPage(
+        vehicleId: id,
+        search: search,
+        page: page,
+        limit: limit,
+      );
+    }
+
     final normalizedPage = page < 1 ? 1 : page;
     final normalizedLimit = limit < 1 ? 100 : limit;
     final response = await _apiClient.get<UserVehicleSensorPage>(
@@ -299,6 +319,244 @@ class UserVehicleService {
       options: _mutationOptions,
       parser: (_) {},
     );
+  }
+
+  UserVehicleSensorPage _demoSensorPage({
+    required String vehicleId,
+    String? search,
+    required int page,
+    required int limit,
+  }) {
+    final now = DateTime.now();
+
+    final sensors = <UserVehicleSensor>[
+      UserVehicleSensor(
+        id: '$vehicleId-sensor-fuel',
+        name: 'Fuel Level',
+        unit: '%',
+        icon: 'fuel',
+        code: 'fuel_level',
+        value: 72,
+        liveValue: 72,
+        displayValue: '72%',
+        dataType: 'number',
+        isActive: true,
+        lastUpdated: now,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      UserVehicleSensor(
+        id: '$vehicleId-sensor-temp',
+        name: 'Engine Temperature',
+        unit: '°C',
+        icon: 'temperature',
+        code: 'engine_temperature',
+        value: 84,
+        liveValue: 84,
+        displayValue: '84 °C',
+        dataType: 'number',
+        isActive: true,
+        lastUpdated: now,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      UserVehicleSensor(
+        id: '$vehicleId-sensor-voltage',
+        name: 'External Voltage',
+        unit: 'V',
+        icon: 'battery',
+        code: 'external_voltage',
+        value: 13.8,
+        liveValue: 13.8,
+        displayValue: '13.8 V',
+        dataType: 'number',
+        isActive: true,
+        lastUpdated: now,
+        createdAt: now,
+        updatedAt: now,
+      ),
+      UserVehicleSensor(
+        id: '$vehicleId-sensor-ignition',
+        name: 'Ignition',
+        unit: null,
+        icon: 'power',
+        code: 'ignition',
+        value: true,
+        liveValue: true,
+        displayValue: 'ON',
+        dataType: 'boolean',
+        isActive: true,
+        lastUpdated: now,
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+
+    final normalizedSearch = search?.trim().toLowerCase();
+
+    final filtered = normalizedSearch == null || normalizedSearch.isEmpty
+        ? sensors
+        : sensors
+            .where(
+              (sensor) =>
+                  sensor.name.toLowerCase().contains(normalizedSearch) ||
+                  sensor.code.toLowerCase().contains(normalizedSearch),
+            )
+            .toList();
+
+    final normalizedPage = page < 1 ? 1 : page;
+    final normalizedLimit = limit < 1 ? 100 : limit;
+    final startIndex = (normalizedPage - 1) * normalizedLimit;
+
+    final items = startIndex >= filtered.length
+        ? <UserVehicleSensor>[]
+        : filtered
+            .skip(startIndex)
+            .take(normalizedLimit)
+            .toList();
+
+    return UserVehicleSensorPage(
+      items: items,
+      page: normalizedPage,
+      limit: normalizedLimit,
+      total: filtered.length,
+      telemetryMeta: <String, dynamic>{
+        'demo': true,
+        'vehicleId': vehicleId,
+        'updatedAt': now.toIso8601String(),
+      },
+    );
+  }
+
+  UserVehicleDetails _demoVehicleDetails(String vehicleId) {
+    final vehicles = _demoVehicles();
+
+    final vehicle = vehicles.firstWhere(
+      (item) => item.id == vehicleId,
+      orElse: () => vehicles.first,
+    );
+
+    return UserVehicleDetails(
+      id: vehicle.id,
+      name: vehicle.name,
+      vin: vehicle.vin,
+      plateNumber: vehicle.plateNumber,
+      isActive: vehicle.isActive,
+      isLicenseBlocked: vehicle.isLicenseBlocked,
+      licenseBlockedAt: vehicle.licenseBlockedAt,
+      licenseBlockReason: vehicle.licenseBlockReason,
+      createdAt: vehicle.createdAt,
+      imei: vehicle.imei,
+      simNumber: vehicle.simNumber,
+      vehicleType: vehicle.vehicleType,
+      vehicleMeta: const <String, dynamic>{
+        'demo': true,
+        'source': 'Smart AVL Fleet Demo',
+      },
+      gmtOffset: '+03:00',
+      device: vehicle.device,
+      plan: const UserVehiclePlanMini(
+        id: 'demo-plan-001',
+        name: 'Demo Fleet Plan',
+        price: 0,
+        currency: 'USD',
+      ),
+    );
+  }
+
+  List<UserVehicleListItem> _demoVehicles() {
+    return const [
+      UserVehicleListItem(
+        id: 'demo-vehicle-001',
+        name: 'Smart AVL Vehicle 01',
+        vin: 'DEMO-VIN-0001',
+        plateNumber: 'AVL-001',
+        isActive: true,
+        isLicenseBlocked: false,
+        licenseBlockedAt: null,
+        licenseBlockReason: null,
+        createdAt: null,
+        imei: '356307042441001',
+        simNumber: '+966500000001',
+        vehicleType: UserVehicleTypeMini(
+          id: 'demo-type-car',
+          name: 'Car',
+          slug: 'car',
+        ),
+        device: UserVehicleDeviceMini(
+          id: 'demo-device-001',
+          imei: '356307042441001',
+          simNumber: '+966500000001',
+          speedVariation: 5,
+          distanceVariation: 0,
+          odometer: 12450,
+          engineHours: 184,
+          ignitionSource: 'ACC',
+          liveOdometer: 12450,
+          liveEngineHours: 184,
+        ),
+      ),
+      UserVehicleListItem(
+        id: 'demo-vehicle-002',
+        name: 'Smart AVL Vehicle 02',
+        vin: 'DEMO-VIN-0002',
+        plateNumber: 'AVL-002',
+        isActive: true,
+        isLicenseBlocked: false,
+        licenseBlockedAt: null,
+        licenseBlockReason: null,
+        createdAt: null,
+        imei: '356307042441002',
+        simNumber: '+966500000002',
+        vehicleType: UserVehicleTypeMini(
+          id: 'demo-type-truck',
+          name: 'Truck',
+          slug: 'truck',
+        ),
+        device: UserVehicleDeviceMini(
+          id: 'demo-device-002',
+          imei: '356307042441002',
+          simNumber: '+966500000002',
+          speedVariation: 5,
+          distanceVariation: 0,
+          odometer: 28760,
+          engineHours: 421,
+          ignitionSource: 'ACC',
+          liveOdometer: 28760,
+          liveEngineHours: 421,
+        ),
+      ),
+      UserVehicleListItem(
+        id: 'demo-vehicle-003',
+        name: 'Smart AVL Vehicle 03',
+        vin: 'DEMO-VIN-0003',
+        plateNumber: 'AVL-003',
+        isActive: false,
+        isLicenseBlocked: false,
+        licenseBlockedAt: null,
+        licenseBlockReason: null,
+        createdAt: null,
+        imei: '356307042441003',
+        simNumber: '+966500000003',
+        vehicleType: UserVehicleTypeMini(
+          id: 'demo-type-van',
+          name: 'Van',
+          slug: 'van',
+        ),
+        device: UserVehicleDeviceMini(
+          id: 'demo-device-003',
+          imei: '356307042441003',
+          simNumber: '+966500000003',
+          speedVariation: 5,
+          distanceVariation: 0,
+          odometer: 8320,
+          engineHours: 97,
+          ignitionSource: 'MOTION',
+          liveOdometer: 8320,
+          liveEngineHours: 97,
+        ),
+      ),
+    ];
   }
 
   Map<String, dynamic> _sensorPayload({

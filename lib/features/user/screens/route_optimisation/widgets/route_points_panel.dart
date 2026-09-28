@@ -387,6 +387,7 @@ class _PointsList extends StatelessWidget {
         vertical: OpenVtsSpacing.xs,
       ),
       itemCount: points.length,
+      // ignore: deprecated_member_use
       onReorder: controller.reorderPoint,
       proxyDecorator: (child, _, __) => Material(
         color: Colors.transparent,

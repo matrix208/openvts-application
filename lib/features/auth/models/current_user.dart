@@ -88,7 +88,7 @@ class CurrentUser {
             json['full_name'],
             json['username'],
           ]) ??
-          'OpenVTS User',
+          'Smart AVL User',
       email: _firstNonEmptyString([
             json['email'],
             json['primaryEmail'],

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../../core/notifications/mobile_push_controller.dart';
 import '../../../core/notifications/mobile_push_perf.dart';
 import '../../../core/performance/open_vts_perf.dart';
@@ -78,13 +79,29 @@ class AuthController extends StateNotifier<AuthState> {
     });
   }
 
+  Future<void> demoLogin() {
+    return OpenVtsPerf.traceAsync('auth.demoLogin', () async {
+      state = const AuthState.loading();
+
+      try {
+        AppConfig.demoMode = true;
+        final response = await _authService.demoLogin();
+        await setSession(response);
+      } catch (error) {
+        _setUnauthenticated(errorMessage: error.toString());
+      }
+    });
+  }
+
   Future<void> googleLogin() {
     return OpenVtsPerf.traceAsync('auth.googleLogin', () async {
       state = const AuthState.loading();
 
       try {
         final serverAuthCode =
-            await GoogleAuthService.instance.signInAndGetServerAuthCode();
+            await GoogleAuthService.instance.signInAndGetServerAuthCode(
+          clientId: AppConfig.googleClientId,
+        );
 
         if (serverAuthCode == null || serverAuthCode.trim().isEmpty) {
           _setUnauthenticated(
@@ -94,9 +111,12 @@ class AuthController extends StateNotifier<AuthState> {
         }
 
         final response = await _authService.googleLogin(serverAuthCode);
+
         await setSession(response);
       } catch (error) {
-        _setUnauthenticated(errorMessage: error.toString());
+        _setUnauthenticated(
+          errorMessage: error.toString(),
+        );
       }
     });
   }
@@ -135,6 +155,8 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   Future<UserRole?> logoutActiveRole() async {
+    AppConfig.demoMode = false;
+
     final activeRole =
         state.user?.role ?? await _tokenStorage.getActiveRoleByPriority();
     if (activeRole == null) {

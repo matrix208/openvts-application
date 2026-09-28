@@ -1,4 +1,4 @@
-package com.openvts.app
+package com.smartavl.app
 
 import io.flutter.embedding.android.FlutterActivity
 

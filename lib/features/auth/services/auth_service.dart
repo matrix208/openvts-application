@@ -5,8 +5,10 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/utils/url_sanitizer.dart';
 import '../../../shared/models/user_role.dart';
 import '../models/current_user.dart';
+import '../models/google_auth_config.dart';
 import '../models/login_request.dart';
 import '../models/login_response.dart';
 
@@ -14,6 +16,31 @@ class AuthService {
   AuthService(this._apiClient);
 
   final ApiClient _apiClient;
+
+  Future<LoginResponse> demoLogin() async {
+    return const LoginResponse(
+      accessToken: 'mock-access-token-user',
+      refreshToken: 'mock-refresh-token-user',
+      user: CurrentUser(
+        id: '1',
+        name: 'Demo User',
+        email: 'demo@smartavl.local',
+        role: UserRole.user,
+        username: 'demo',
+        profileUrl: 'https://i.pravatar.cc/300?u=demo',
+        mobilePrefix: '+1',
+        mobileNumber: '5559876543',
+        phoneNumber: '+1 5559876543',
+        accountStatus: 'active',
+        isVerified: true,
+        addressLine: '221 Fleet Street',
+        countryCode: 'US',
+        stateCode: 'CA',
+        cityName: 'San Francisco',
+        pincode: '94107',
+      ),
+    );
+  }
 
   Future<LoginResponse> login(LoginRequest request) async {
     if (AppConfig.useMockData) {
@@ -35,7 +62,7 @@ class AuthService {
                   : 'User',
           email: request.identifier.contains('@')
               ? request.identifier
-              : '${request.identifier}@openvts.local',
+              : '${request.identifier}@smartavl.local',
           role: role,
           username: request.identifier,
           profileUrl: 'https://i.pravatar.cc/300?u=${role.apiValue}',
@@ -65,6 +92,61 @@ class AuthService {
     }
 
     return response.data;
+  }
+
+  Future<GoogleAuthConfig> fetchGoogleAuthConfig() async {
+    if (AppConfig.useMockData) {
+      final configured = AppConfig.googleClientId.trim();
+
+      return GoogleAuthConfig(
+        enabled: configured.isNotEmpty,
+        clientId: configured.isNotEmpty ? configured : null,
+      );
+    }
+
+    try {
+      final response = await _apiClient.get<GoogleAuthConfig>(
+        ApiEndpoints.auth.googleClientId,
+        parser: (json) {
+          if (json is String) {
+            final value = json.trim();
+
+            return GoogleAuthConfig(
+              enabled: value.isNotEmpty,
+              clientId: value.isNotEmpty ? value : null,
+            );
+          }
+
+          if (json is Map<String, dynamic>) {
+            final payload = json['data'];
+
+            if (payload is Map<String, dynamic>) {
+              return GoogleAuthConfig.fromJson(payload);
+            }
+
+            return GoogleAuthConfig.fromJson(json);
+          }
+
+          return const GoogleAuthConfig(
+            enabled: false,
+          );
+        },
+      );
+
+      return response.data;
+    } catch (_) {
+      final fallback = AppConfig.googleClientId.trim();
+
+      return GoogleAuthConfig(
+        enabled: fallback.isNotEmpty,
+        clientId: fallback.isNotEmpty ? fallback : null,
+      );
+    }
+  }
+
+  Future<String?> fetchGoogleClientId() async {
+    final config = await fetchGoogleAuthConfig();
+    return config.clientId;
   }
 
   Future<LoginResponse> googleLogin(String serverAuthCode) async {
@@ -172,6 +254,68 @@ class AuthService {
     }
 
     return refreshed.copyWith(profileUrl: _appendCacheBust(profileUrl));
+  }
+
+  /// Verifies reachability of a self-hosted OpenVTS server before saving.
+  static Future<void> testServerConnection(String serverUrl) async {
+    final sanitizedUrl = UrlSanitizer.sanitizeUrl(serverUrl);
+    if (sanitizedUrl.isEmpty || !UrlSanitizer.isValidUrl(sanitizedUrl)) {
+      throw const ApiException(message: 'Invalid server URL format');
+    }
+
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: sanitizedUrl,
+        connectTimeout: const Duration(seconds: 6),
+        receiveTimeout: const Duration(seconds: 6),
+        headers: const {
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    try {
+      final response = await dio.get<dynamic>(
+        ApiEndpoints.auth.googleClientId,
+      );
+
+      final statusCode = response.statusCode ?? 0;
+      if (statusCode >= 200 && statusCode < 400) {
+        return;
+      }
+    } on DioException catch (dioErr) {
+      final statusCode = dioErr.response?.statusCode;
+      // If server responded with an HTTP status code (even 401/403/404), the host and port are active
+      if (statusCode != null && statusCode > 0) {
+        return;
+      }
+
+      final errorMsg = dioErr.message ?? '';
+      if (dioErr.type == DioExceptionType.connectionTimeout ||
+          dioErr.type == DioExceptionType.sendTimeout ||
+          dioErr.type == DioExceptionType.receiveTimeout) {
+        throw ApiException(
+          message:
+              'Connection timed out while reaching $sanitizedUrl. Please check if the server is online.',
+        );
+      }
+
+      if (dioErr.type == DioExceptionType.connectionError ||
+          errorMsg.contains('SocketException') ||
+          errorMsg.contains('Failed host lookup')) {
+        throw ApiException(
+          message:
+              'Could not connect to $sanitizedUrl. Host lookup or network connection failed.',
+        );
+      }
+
+      throw ApiException(
+        message: 'Could not reach server: ${dioErr.message ?? 'Network error'}',
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException(message: 'Failed to verify server connection: $e');
+    }
   }
 
   String _profileEndpoint(UserRole role) {

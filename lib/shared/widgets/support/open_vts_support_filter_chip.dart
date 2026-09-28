@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/core/theme/open_vts_radius.dart';
-import 'package:open_vts/core/theme/open_vts_typography.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_radius.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/core/theme/open_vts_typography.dart';
 
 class OpenVtsSupportFilterChip extends StatelessWidget {
   const OpenVtsSupportFilterChip({

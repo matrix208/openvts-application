@@ -700,7 +700,7 @@ class _FakeSocketService extends SocketService {
         },
         super(
           TokenStorage(const FlutterSecureStorage()),
-          apiBaseUrl: 'https://app.openvts.io/api',
+          apiBaseUrl: 'https://app.smartavl.net/',
         );
 
   final Map<String, _FakeSocketConnection> _connections;

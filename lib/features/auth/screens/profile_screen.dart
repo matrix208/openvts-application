@@ -116,7 +116,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 _ProfileAvatar(
                                   displayName: user.name.trim().isNotEmpty
                                       ? user.name.trim()
-                                      : 'OpenVTS User',
+                                      : 'Smart AVL User',
                                   localPhotoBytes: profileState.localPhotoBytes,
                                   profileImageUrl: resolveProfileImageUrl(
                                     baseUrl,
@@ -129,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 Text(
                                   user.name.trim().isNotEmpty
                                       ? user.name.trim()
-                                      : 'OpenVTS User',
+                                      : 'Smart AVL User',
                                   textAlign: TextAlign.center,
                                   style: OpenVtsTypography.titleLarge.copyWith(
                                     color: theme.colorScheme.onSurface,

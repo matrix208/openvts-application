@@ -1,16 +1,16 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/core/theme/open_vts_typography.dart';
-import 'package:open_vts/features/user/controllers/user_providers.dart';
-import 'package:open_vts/features/user/models/user_support_constraints.dart';
-import 'package:open_vts/features/user/models/user_support_model.dart';
-import 'package:open_vts/features/user/screens/support/widgets/user_support_attachment_widgets.dart';
-import 'package:open_vts/shared/helpers/toast_helper.dart';
-import 'package:open_vts/shared/widgets/open_vts_button.dart';
-import 'package:open_vts/shared/widgets/open_vts_card.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/core/theme/open_vts_typography.dart';
+import 'package:smart_avl/features/user/controllers/user_providers.dart';
+import 'package:smart_avl/features/user/models/user_support_constraints.dart';
+import 'package:smart_avl/features/user/models/user_support_model.dart';
+import 'package:smart_avl/features/user/screens/support/widgets/user_support_attachment_widgets.dart';
+import 'package:smart_avl/shared/helpers/toast_helper.dart';
+import 'package:smart_avl/shared/widgets/open_vts_button.dart';
+import 'package:smart_avl/shared/widgets/open_vts_card.dart';
 
 class UserSupportTicketForm extends ConsumerStatefulWidget {
   const UserSupportTicketForm({

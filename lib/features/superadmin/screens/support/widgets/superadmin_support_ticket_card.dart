@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/utils/date_time_formatter.dart';
-import 'package:open_vts/features/superadmin/models/superadmin_support_model.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/utils/date_time_formatter.dart';
+import 'package:smart_avl/features/superadmin/models/superadmin_support_model.dart';
 
-import 'package:open_vts/shared/widgets/support/open_vts_support_ticket_card.dart';
+import 'package:smart_avl/shared/widgets/support/open_vts_support_ticket_card.dart';
 
 const DateTimeFormatter _dateFormatter = DateTimeFormatter();
 

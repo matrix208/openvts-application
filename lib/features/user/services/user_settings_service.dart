@@ -3,8 +3,8 @@ import 'package:http_parser/http_parser.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_endpoints.dart';
-import '../../../core/api/api_options.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/api/api_options.dart';
 import '../models/user_settings_model.dart';
 
 class UserSettingsService {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import '../../../core/theme/open_vts_typography.dart';
 import '../../../shared/helpers/toast_helper.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/auth_state.dart';
+import '../widgets/google_web_button.dart';
 import '../widgets/login_form.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -75,10 +77,11 @@ class LoginScreen extends ConsumerWidget {
                     child: _LoginPanel(
                       isLoading: isLoading,
                       errorMessage: authState.errorMessage,
-                      onGoogleSignIn: () {
-                        ref
-                            .read(authControllerProvider.notifier)
-                            .googleLogin();
+                      onGoogleLogin: () {
+                        ref.read(authControllerProvider.notifier).googleLogin();
+                      },
+                      onDemoLogin: () {
+                        ref.read(authControllerProvider.notifier).demoLogin();
                       },
                       onSubmit: (identifier, password) {
                         ref.read(authControllerProvider.notifier).login(
@@ -138,14 +141,16 @@ class _LoginPanel extends StatelessWidget {
   const _LoginPanel({
     required this.isLoading,
     required this.onSubmit,
-    required this.onGoogleSignIn,
+    required this.onGoogleLogin,
+    required this.onDemoLogin,
     this.errorMessage,
   });
 
   final bool isLoading;
   final String? errorMessage;
-  final VoidCallback onGoogleSignIn;
   final void Function(String email, String password) onSubmit;
+  final VoidCallback onGoogleLogin;
+  final VoidCallback onDemoLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +176,7 @@ class _LoginPanel extends StatelessWidget {
             height: 52,
             errorBuilder: (_, __, ___) {
               return Text(
-                'Open VTS',
+                'Smart AVL',
                 style: OpenVtsTypography.titleMedium.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -180,73 +185,13 @@ class _LoginPanel extends StatelessWidget {
           ),
           const SizedBox(height: OpenVtsSpacing.xl),
           LoginForm(
+            onGoogleLogin: onGoogleLogin,
+            onDemoLogin: onDemoLogin,
             isLoading: isLoading,
             onSubmit: onSubmit,
+            googleWebButton: kIsWeb ? const GoogleWebButton() : null,
           ),
-          const SizedBox(height: OpenVtsSpacing.md),
-          Row(
-            children: [
-              Expanded(
-                child: Divider(
-                  color: OpenVtsColors.border,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: OpenVtsSpacing.sm,
-                ),
-                child: Text(
-                  'OR',
-                  style: OpenVtsTypography.label.copyWith(
-                    color: OpenVtsColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Divider(
-                  color: OpenVtsColors.border,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: OpenVtsSpacing.md),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: OutlinedButton.icon(
-              onPressed: isLoading ? null : onGoogleSignIn,
-              icon: Container(
-                width: 22,
-                height: 22,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border.all(color: OpenVtsColors.border),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  'G',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              label: const Text('Continue with Google'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: OpenVtsColors.brandInk,
-                side: const BorderSide(
-                  color: OpenVtsColors.border,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    OpenVtsRadius.md,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (errorMessage != null) ...[
+          if (errorMessage != null && errorMessage!.trim().isNotEmpty) ...[
             const SizedBox(height: OpenVtsSpacing.md),
             Container(
               width: double.infinity,

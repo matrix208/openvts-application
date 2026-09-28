@@ -1,0 +1,45 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class AppConfig {
+  const AppConfig._();
+
+  static const appName = 'Smart AVL';
+  static const defaultApiBaseUrl = 'https://app.smartavl.net/api'
+
+  static bool demoMode = true;
+
+  static String googleClientId = '';
+
+  static String get apiBaseUrl {
+    final envValue = dotenv.env['API_BASE_URL'];
+    if (envValue != null && envValue.trim().isNotEmpty) {
+      return envValue.trim();
+    }
+
+    return const String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: defaultApiBaseUrl,
+    );
+  }
+
+  static bool get useMockData {
+    final envValue = dotenv.env['USE_MOCK_DATA'];
+    if (envValue != null && envValue.trim().isNotEmpty) {
+      return envValue.trim().toLowerCase() == 'true';
+    }
+
+    return const bool.fromEnvironment(
+      'USE_MOCK_DATA',
+      defaultValue: true,
+    );
+  }
+
+  static String apiOriginBaseUrl() {
+    final uri = Uri.parse(apiBaseUrl);
+    return '${uri.scheme}://${uri.authority}';
+  }
+
+  // Reduced defaults to speed up UI failure feedback on mobile.
+  static const connectTimeoutSeconds = 8;
+  static const receiveTimeoutSeconds = 12;
+}

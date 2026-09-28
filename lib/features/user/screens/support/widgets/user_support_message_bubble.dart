@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/theme/open_vts_radius.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/core/theme/open_vts_typography.dart';
-import 'package:open_vts/core/utils/date_time_formatter.dart';
-import 'package:open_vts/features/user/models/user_support_model.dart';
-import 'package:open_vts/features/user/screens/support/widgets/user_support_attachment_widgets.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_radius.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/core/theme/open_vts_typography.dart';
+import 'package:smart_avl/core/utils/date_time_formatter.dart';
+import 'package:smart_avl/features/user/models/user_support_model.dart';
+import 'package:smart_avl/features/user/screens/support/widgets/user_support_attachment_widgets.dart';
 
 const DateTimeFormatter _dateFormatter = DateTimeFormatter();
 

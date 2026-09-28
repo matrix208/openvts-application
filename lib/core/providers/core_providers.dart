@@ -17,6 +17,7 @@ import '../socket/socket_service.dart';
 import '../storage/local_cache.dart';
 import '../storage/storage_keys.dart';
 import '../storage/token_storage.dart';
+import '../utils/url_sanitizer.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage(
@@ -159,7 +160,10 @@ class ApiBaseUrlController extends StateNotifier<String> {
   static String _initialValue(LocalCache localCache) {
     final overrideValue = localCache.getString(StorageKeys.apiBaseUrlOverride);
     if (overrideValue != null && overrideValue.trim().isNotEmpty) {
-      return _normalizeUrl(overrideValue);
+      final sanitized = UrlSanitizer.sanitizeUrl(overrideValue);
+      if (sanitized.isNotEmpty) {
+        return sanitized;
+      }
     }
 
     return _normalizeUrl(AppConfig.apiBaseUrl);
@@ -186,6 +190,6 @@ class ApiBaseUrlController extends StateNotifier<String> {
   }
 
   static String _normalizeUrl(String value) {
-    return value.trim().replaceAll(RegExp(r'/+$'), '');
+    return UrlSanitizer.sanitizeUrl(value);
   }
 }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/theme/open_vts_radius.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/core/theme/open_vts_typography.dart';
-import 'package:open_vts/features/superadmin/models/superadmin_support_model.dart';
-import 'package:open_vts/features/superadmin/models/superadmin_support_state.dart';
-import 'package:open_vts/shared/widgets/open_vts_button.dart';
-import 'package:open_vts/shared/widgets/open_vts_card.dart';
-import 'package:open_vts/shared/widgets/open_vts_error_view.dart';
-import 'package:open_vts/shared/widgets/open_vts_search_field.dart';
-import 'package:open_vts/shared/widgets/support/open_vts_support_filter_chip.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_radius.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/core/theme/open_vts_typography.dart';
+import 'package:smart_avl/features/superadmin/models/superadmin_support_model.dart';
+import 'package:smart_avl/features/superadmin/models/superadmin_support_state.dart';
+import 'package:smart_avl/shared/widgets/open_vts_button.dart';
+import 'package:smart_avl/shared/widgets/open_vts_card.dart';
+import 'package:smart_avl/shared/widgets/open_vts_error_view.dart';
+import 'package:smart_avl/shared/widgets/open_vts_search_field.dart';
+import 'package:smart_avl/shared/widgets/support/open_vts_support_filter_chip.dart';
 
 import 'superadmin_support_ticket_card.dart';
 

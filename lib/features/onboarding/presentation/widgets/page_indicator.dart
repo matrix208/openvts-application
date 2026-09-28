@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
 
 class PageIndicator extends StatelessWidget {
   final bool isActive;

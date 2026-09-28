@@ -1,11 +1,11 @@
 {
-    "name": "Open VTS",
-    "short_name": "Open VTS",
+    "name": "Smart AVL",
+    "short_name": "Smart AVL",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Smart AVL mobile and web application.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

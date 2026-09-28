@@ -266,7 +266,7 @@ class OpenVtsRoleHome extends StatelessWidget {
                                     fit: BoxFit.contain,
                                     errorBuilder: (_, __, ___) {
                                       return Text(
-                                        'Open VTS',
+                                        'Smart AVL',
                                         style: OpenVtsTypography.brandTitle
                                             .copyWith(
                                           color: theme.colorScheme.onSurface,
@@ -348,7 +348,7 @@ class OpenVtsRoleHome extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  '© 2026 Open VTS All rights reserved.',
+                                  '© 2026 Useful Technology for Information System',
                                   style: OpenVtsTypography.meta.copyWith(
                                     color: secondaryTextColor,
                                     fontWeight: FontWeight.w500,

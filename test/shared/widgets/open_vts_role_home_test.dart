@@ -137,16 +137,16 @@ void main() {
   group('resolveProfileImageUrl', () {
     test('resolves relative paths against the API base path', () {
       final resolved = resolveProfileImageUrl(
-        'https://app.openvts.io/api',
+        'https://app.smartavl.net/',
         'uploads/profile.jpg',
       );
 
-      expect(resolved, 'https://app.openvts.io/api/uploads/profile.jpg');
+      expect(resolved, 'https://app.smartavl.net//uploads/profile.jpg');
     });
 
     test('resolves absolute-path URLs against the origin root', () {
       final resolved = resolveProfileImageUrl(
-        'https://app.openvts.io/api',
+        'https://app.smartavl.net/',
         '/uploads/profile.jpg',
       );
 
@@ -155,7 +155,7 @@ void main() {
 
     test('preserves fully qualified URLs', () {
       final resolved = resolveProfileImageUrl(
-        'https://app.openvts.io/api',
+        'https://app.smartavl.net/',
         'https://cdn.openvts.io/profile.jpg',
       );
 

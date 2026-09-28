@@ -3,8 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConfig {
   const AppConfig._();
 
-  static const appName = 'OpenVTS';
-  static const defaultApiBaseUrl = 'https://app.openvts.io/api';
+  static const appName = 'Smart AVL';
+  static const defaultApiBaseUrl = 'https://app.smartavl.net/api';
+
+  static bool demoMode = true;
+
+  static String googleClientId = '';
 
   static String get apiBaseUrl {
     final envValue = dotenv.env['API_BASE_URL'];
@@ -35,7 +39,6 @@ class AppConfig {
     return '${uri.scheme}://${uri.authority}';
   }
 
-  // Reduced defaults to speed up UI failure feedback on mobile.
   static const connectTimeoutSeconds = 8;
   static const receiveTimeoutSeconds = 12;
 }

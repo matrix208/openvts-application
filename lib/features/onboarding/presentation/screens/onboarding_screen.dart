@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/core/providers/shared_preferences_provider.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:open_vts/features/onboarding/presentation/widgets/onboarding_page.dart';
-import 'package:open_vts/features/onboarding/presentation/widgets/page_indicator.dart';
+import 'package:smart_avl/core/providers/shared_preferences_provider.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/features/onboarding/presentation/controllers/onboarding_controller.dart';
+import 'package:smart_avl/features/onboarding/presentation/widgets/onboarding_page.dart';
+import 'package:smart_avl/features/onboarding/presentation/widgets/page_indicator.dart';
 
 class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key});

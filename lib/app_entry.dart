@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:open_vts/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:smart_avl/features/onboarding/presentation/controllers/onboarding_controller.dart';
+import 'package:smart_avl/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 class AppEntry extends ConsumerWidget {
   const AppEntry({super.key, required this.child});

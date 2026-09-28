@@ -339,7 +339,7 @@ class MobilePushService {
       ApiEndpoints.user.testFcmMe,
       data: <String, dynamic>{
         'platform': platform.apiValue,
-        'title': 'OpenVTS Mobile Test',
+        'title': 'Smart AVL Mobile Test',
         'body': 'Mobile push notifications are working.',
       },
       parser: (json) => json,

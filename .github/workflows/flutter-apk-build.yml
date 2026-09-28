@@ -10,7 +10,7 @@ jobs:
   build-apk:
     runs-on: ubuntu-latest
     env:
-      API_BASE_URL: https://app.openvts.io/api
+      API_BASE_URL: https://app.smartavl.net/api
 
     steps:
       - name: Check out code

@@ -2384,11 +2384,13 @@ class _DashboardActivityFilterResult {
     this.actorId,
     this.fromDate,
     this.toDate,
-    this.clearFilters = false,
-  });
+  }) : clearFilters = false;
 
   const _DashboardActivityFilterResult.clear()
-      : this(clearFilters: true);
+      : actorId = null,
+        fromDate = null,
+        toDate = null,
+        clearFilters = true;
 
   final int? actorId;
   final DateTime? fromDate;

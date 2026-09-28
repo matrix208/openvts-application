@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_vts/core/providers/shared_preferences_provider.dart';
-import 'package:open_vts/features/onboarding/models/onboarding_model.dart';
+import 'package:smart_avl/core/providers/shared_preferences_provider.dart';
+import 'package:smart_avl/features/onboarding/models/onboarding_model.dart';
 
 final onboardingControllerProvider =
     StateNotifierProvider<OnboardingController, int>((ref) {

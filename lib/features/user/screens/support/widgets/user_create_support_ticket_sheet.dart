@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/features/user/screens/support/widgets/user_support_ticket_form.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/features/user/screens/support/widgets/user_support_ticket_form.dart';
 
 class UserCreateSupportTicketSheet extends StatelessWidget {
   const UserCreateSupportTicketSheet({super.key});

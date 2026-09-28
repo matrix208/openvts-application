@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_avl/shared/widgets/support/open_vts_support_filter_chip.dart';
 
 import '../../../../../core/theme/open_vts_colors.dart';
 import '../../../../../core/theme/open_vts_radius.dart';
@@ -10,7 +11,6 @@ import '../../../../../shared/widgets/open_vts_error_view.dart';
 import '../../../../../shared/widgets/open_vts_search_field.dart';
 import '../../../models/admin_support_model.dart';
 import '../../../models/admin_support_state.dart';
-import 'package:open_vts/shared/widgets/support/open_vts_support_filter_chip.dart';
 import 'admin_support_ticket_card.dart';
 
 class AdminSupportTicketListView extends StatelessWidget {

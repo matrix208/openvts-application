@@ -15,7 +15,7 @@ class MobilePushLocalNotifications {
   }) : _notifications = notifications ?? FlutterLocalNotificationsPlugin();
 
   static const androidChannelId = 'open_vts_alerts';
-  static const androidChannelName = 'OpenVTS Alerts';
+  static const androidChannelName = 'Smart AVL Alerts';
   static const androidChannelDescription =
       'Vehicle alerts and operational notifications';
 
@@ -70,7 +70,7 @@ class MobilePushLocalNotifications {
 
     final title = message.title?.trim().isNotEmpty == true
         ? message.title!.trim()
-        : 'OpenVTS';
+        : 'Smart AVL';
     final body = message.body?.trim().isNotEmpty == true
         ? message.body!.trim()
         : 'New notification received.';

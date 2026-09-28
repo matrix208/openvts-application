@@ -33,7 +33,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               return const Icon(Icons.navigation_outlined, size: 56);
             }),
             const SizedBox(height: OpenVtsSpacing.md),
-            const Text('OpenVTS', style: OpenVtsTypography.titleMedium),
+            const Text('Smart AVL', style: OpenVtsTypography.titleMedium),
             const SizedBox(height: OpenVtsSpacing.lg),
             const OpenVtsLoader(),
           ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:open_vts/core/theme/open_vts_colors.dart';
-import 'package:open_vts/core/theme/open_vts_spacing.dart';
-import 'package:open_vts/core/theme/open_vts_typography.dart';
-import 'package:open_vts/shared/widgets/open_vts_card.dart';
+import 'package:smart_avl/core/theme/open_vts_colors.dart';
+import 'package:smart_avl/core/theme/open_vts_spacing.dart';
+import 'package:smart_avl/core/theme/open_vts_typography.dart';
+import 'package:smart_avl/shared/widgets/open_vts_card.dart';
 import 'open_vts_support_chips.dart';
 
 class OpenVtsSupportTicketCard extends StatelessWidget {

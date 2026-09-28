@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/router/route_paths.dart';
 import '../../../core/theme/open_vts_colors.dart';
+import '../../../core/theme/open_vts_radius.dart';
 import '../../../core/theme/open_vts_spacing.dart';
 import '../../../core/theme/open_vts_typography.dart';
 import '../../../core/utils/validators.dart';
@@ -13,11 +14,17 @@ class LoginForm extends StatefulWidget {
   const LoginForm({
     required this.isLoading,
     required this.onSubmit,
+    required this.onGoogleLogin,
+    required this.onDemoLogin,
+    this.googleWebButton,
     super.key,
   });
 
   final bool isLoading;
   final void Function(String email, String password) onSubmit;
+  final VoidCallback onGoogleLogin;
+  final VoidCallback onDemoLogin;
+  final Widget? googleWebButton;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -53,6 +60,7 @@ class _LoginFormState extends State<LoginForm> {
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             OpenVtsTextField(
               label: 'Username',
@@ -60,7 +68,10 @@ class _LoginFormState extends State<LoginForm> {
               controller: _identifierController,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.username],
+              autofillHints: const [
+                AutofillHints.username,
+                AutofillHints.email
+              ],
               prefixIcon: Icons.person_outline_rounded,
               validator: (value) =>
                   Validators.required(value, fieldName: 'Username'),
@@ -92,7 +103,7 @@ class _LoginFormState extends State<LoginForm> {
                   Validators.required(value, fieldName: 'Password'),
               onFieldSubmitted: (_) => _submit(),
             ),
-            const SizedBox(height: OpenVtsSpacing.sm),
+            const SizedBox(height: OpenVtsSpacing.xs),
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: TextButton(
@@ -101,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
                     : () => context.push(RoutePaths.forgotPassword),
                 style: TextButton.styleFrom(
                   foregroundColor: OpenVtsColors.textTertiary,
-                  minimumSize: const Size(44, 44),
+                  minimumSize: const Size(44, 40),
                   padding: EdgeInsets.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textStyle: OpenVtsTypography.meta.copyWith(
@@ -112,13 +123,116 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             const SizedBox(height: OpenVtsSpacing.md),
+            OpenVtsButton(
+              label: 'Login',
+              isLoading: widget.isLoading,
+              trailingIcon: Icons.arrow_forward_rounded,
+              onPressed: _submit,
+            ),
+            const SizedBox(height: OpenVtsSpacing.lg),
+            Row(
+              children: [
+                const Expanded(
+                  child: Divider(
+                    color: OpenVtsColors.border,
+                    thickness: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: OpenVtsSpacing.md,
+                  ),
+                  child: Text(
+                    'OR',
+                    style: OpenVtsTypography.label.copyWith(
+                      color: OpenVtsColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const Expanded(
+                  child: Divider(
+                    color: OpenVtsColors.border,
+                    thickness: 1,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: OpenVtsSpacing.lg),
+            if (widget.googleWebButton != null)
+              widget.googleWebButton!
+            else
+              SizedBox(
+                height: 46,
+                child: OutlinedButton(
+                  onPressed: widget.isLoading ? null : widget.onGoogleLogin,
+                  style: OutlinedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: OpenVtsColors.white,
+                    foregroundColor: OpenVtsColors.brandInk,
+                    disabledForegroundColor: OpenVtsColors.textTertiary,
+                    side: const BorderSide(color: OpenVtsColors.border),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(OpenVtsRadius.button),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: OpenVtsSpacing.lg,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 20,
+                        height: 20,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'G',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'sans-serif',
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: OpenVtsSpacing.sm),
+                      Text(
+                        'Continue with Google',
+                        style: OpenVtsTypography.label.copyWith(
+                          color: OpenVtsColors.brandInk,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: OpenVtsSpacing.md),
             SizedBox(
-              width: double.infinity,
-              child: OpenVtsButton(
-                label: 'Login',
-                isLoading: widget.isLoading,
-                trailingIcon: Icons.arrow_forward_rounded,
-                onPressed: _submit,
+              height: 46,
+              child: OutlinedButton(
+                onPressed: widget.isLoading ? null : widget.onDemoLogin,
+                style: OutlinedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: OpenVtsColors.white,
+                  foregroundColor: OpenVtsColors.brandInk,
+                  disabledForegroundColor: OpenVtsColors.textTertiary,
+                  side: const BorderSide(color: OpenVtsColors.border),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(OpenVtsRadius.button),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: OpenVtsSpacing.lg,
+                  ),
+                ),
+                child: Text(
+                  'Demo Login',
+                  style: OpenVtsTypography.label.copyWith(
+                    color: OpenVtsColors.brandInk,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
