@@ -11,8 +11,13 @@ import '../../../core/theme/open_vts_typography.dart';
 import '../../../shared/helpers/toast_helper.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/auth_state.dart';
+import '../models/google_auth_config.dart';
 import '../widgets/google_web_button.dart';
 import '../widgets/login_form.dart';
+
+final googleAuthConfigProvider = FutureProvider<GoogleAuthConfig>((ref) {
+  return ref.read(authServiceProvider).fetchGoogleAuthConfig();
+});
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -39,7 +44,9 @@ class LoginScreen extends ConsumerWidget {
     });
 
     final authState = ref.watch(authControllerProvider);
+    final googleAuthConfig = ref.watch(googleAuthConfigProvider);
     final isLoading = authState.status == AuthStatus.loading;
+    final googleEnabled = googleAuthConfig.valueOrNull?.enabled == true;
 
     return Scaffold(
       body: DecoratedBox(
@@ -76,9 +83,18 @@ class LoginScreen extends ConsumerWidget {
                     constraints: const BoxConstraints(maxWidth: 380),
                     child: _LoginPanel(
                       isLoading: isLoading,
+                      googleEnabled: googleEnabled,
+                      googleClientId: googleAuthConfig.valueOrNull?.clientId,
+                      googleServerClientId:
+                          googleAuthConfig.valueOrNull?.serverClientId,
                       errorMessage: authState.errorMessage,
                       onGoogleLogin: () {
                         ref.read(authControllerProvider.notifier).googleLogin();
+                      },
+                      onGoogleServerAuthCode: (serverAuthCode) {
+                        ref
+                            .read(authControllerProvider.notifier)
+                            .googleLoginWithServerAuthCode(serverAuthCode);
                       },
                       onDemoLogin: () {
                         ref.read(authControllerProvider.notifier).demoLogin();
@@ -140,16 +156,24 @@ class _LoginSettingsButton extends StatelessWidget {
 class _LoginPanel extends StatelessWidget {
   const _LoginPanel({
     required this.isLoading,
+    required this.googleEnabled,
+    this.googleClientId,
+    this.googleServerClientId,
     required this.onSubmit,
     required this.onGoogleLogin,
+    required this.onGoogleServerAuthCode,
     required this.onDemoLogin,
     this.errorMessage,
   });
 
   final bool isLoading;
+  final bool googleEnabled;
+  final String? googleClientId;
+  final String? googleServerClientId;
   final String? errorMessage;
   final void Function(String email, String password) onSubmit;
   final VoidCallback onGoogleLogin;
+  final ValueChanged<String> onGoogleServerAuthCode;
   final VoidCallback onDemoLogin;
 
   @override
@@ -189,7 +213,15 @@ class _LoginPanel extends StatelessWidget {
             onDemoLogin: onDemoLogin,
             isLoading: isLoading,
             onSubmit: onSubmit,
-            googleWebButton: kIsWeb ? const GoogleWebButton() : null,
+            googleEnabled: googleEnabled,
+            googleWebButton:
+                googleEnabled && kIsWeb
+                    ? GoogleWebButton(
+                        clientId: googleClientId,
+                        serverClientId: googleServerClientId,
+                        onServerAuthCode: onGoogleServerAuthCode,
+                      )
+                    : null,
           ),
           if (errorMessage != null && errorMessage!.trim().isNotEmpty) ...[
             const SizedBox(height: OpenVtsSpacing.md),

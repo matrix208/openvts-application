@@ -10,8 +10,14 @@ class GoogleAuthConfig {
   final String? serverClientId;
 
   factory GoogleAuthConfig.fromJson(Map<String, dynamic> json) {
+    final enabled = json['enabled'] is bool
+        ? json['enabled'] as bool
+        : json['action'] is bool
+            ? json['action'] as bool
+            : false;
+
     return GoogleAuthConfig(
-      enabled: json['enabled'] != false,
+      enabled: enabled,
       clientId: _readString(json, [
         'clientId',
         'client_id',

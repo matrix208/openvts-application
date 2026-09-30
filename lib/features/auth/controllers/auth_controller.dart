@@ -98,9 +98,29 @@ class AuthController extends StateNotifier<AuthState> {
       state = const AuthState.loading();
 
       try {
+        final googleConfig = await _authService.fetchGoogleAuthConfig();
+
+        if (!googleConfig.enabled) {
+          _setUnauthenticated(
+            errorMessage: 'Google Sign-In is currently disabled',
+          );
+          return;
+        }
+
+        final clientId = googleConfig.clientId?.trim();
+        final serverClientId = googleConfig.serverClientId?.trim();
+
+        if (clientId == null || clientId.isEmpty) {
+          _setUnauthenticated(
+            errorMessage: 'Google Sign-In is not configured',
+          );
+          return;
+        }
+
         final serverAuthCode =
             await GoogleAuthService.instance.signInAndGetServerAuthCode(
-          clientId: AppConfig.googleClientId,
+          clientId: clientId,
+          serverClientId: serverClientId,
         );
 
         if (serverAuthCode == null || serverAuthCode.trim().isEmpty) {
@@ -110,15 +130,51 @@ class AuthController extends StateNotifier<AuthState> {
           return;
         }
 
-        final response = await _authService.googleLogin(serverAuthCode);
-
-        await setSession(response);
+        await googleLoginWithServerAuthCode(serverAuthCode);
       } catch (error) {
         _setUnauthenticated(
           errorMessage: error.toString(),
         );
       }
     });
+  }
+
+  Future<void> googleLoginWithServerAuthCode(String serverAuthCode) {
+    return OpenVtsPerf.traceAsync(
+      'auth.googleLoginWithServerAuthCode',
+      () async {
+        state = const AuthState.loading();
+
+        try {
+          final code = serverAuthCode.trim();
+
+          if (code.isEmpty) {
+            _setUnauthenticated(
+              errorMessage:
+                  'Google Sign-In did not return an authorization code',
+            );
+            return;
+          }
+
+          final googleConfig = await _authService.fetchGoogleAuthConfig();
+
+          if (!googleConfig.enabled) {
+            _setUnauthenticated(
+              errorMessage: 'Google Sign-In is currently disabled',
+            );
+            return;
+          }
+
+          final response = await _authService.googleLogin(code);
+
+          await setSession(response);
+        } catch (error) {
+          _setUnauthenticated(
+            errorMessage: error.toString(),
+          );
+        }
+      },
+    );
   }
 
   Future<void> setSession(LoginResponse response) {

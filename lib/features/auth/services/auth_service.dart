@@ -121,6 +121,15 @@ class AuthService {
             final payload = json['data'];
 
             if (payload is Map<String, dynamic>) {
+              final nestedPayload = payload['data'];
+
+              if (nestedPayload is Map<String, dynamic>) {
+                return GoogleAuthConfig.fromJson({
+                  ...payload,
+                  ...nestedPayload,
+                });
+              }
+
               return GoogleAuthConfig.fromJson(payload);
             }
 

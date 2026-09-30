@@ -42,8 +42,20 @@ class ApiResponse<T> {
 
       message =
           envelopeData['message']?.toString() ?? json['message']?.toString();
+
       if (envelopeData.containsKey('data')) {
-        payload = envelopeData['data'];
+        final nestedData = envelopeData['data'];
+
+        if (action is bool && nestedData is Map<String, dynamic>) {
+          payload = <String, dynamic>{
+            ...nestedData,
+            'action': action,
+            if (envelopeData['message'] != null)
+              'message': envelopeData['message'],
+          };
+        } else {
+          payload = nestedData;
+        }
       }
     } else {
       payload ??= json;

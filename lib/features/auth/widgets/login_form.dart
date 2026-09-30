@@ -16,6 +16,7 @@ class LoginForm extends StatefulWidget {
     required this.onSubmit,
     required this.onGoogleLogin,
     required this.onDemoLogin,
+    required this.googleEnabled,
     this.googleWebButton,
     super.key,
   });
@@ -24,6 +25,7 @@ class LoginForm extends StatefulWidget {
   final void Function(String email, String password) onSubmit;
   final VoidCallback onGoogleLogin;
   final VoidCallback onDemoLogin;
+  final bool googleEnabled;
   final Widget? googleWebButton;
 
   @override
@@ -158,6 +160,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ],
             ),
+            if (widget.googleEnabled) ...[
             const SizedBox(height: OpenVtsSpacing.lg),
             if (widget.googleWebButton != null)
               widget.googleWebButton!
@@ -208,6 +211,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
+            ],
             const SizedBox(height: OpenVtsSpacing.md),
             SizedBox(
               height: 46,
